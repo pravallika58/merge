@@ -1,0 +1,67 @@
+import time
+import glob
+from pathlib import Path
+
+
+def MergeSort(list_of_numbers):
+    count = 0
+
+    if len(list_of_numbers) > 1:
+        intMidValue = len(list_of_numbers)//2
+        listLeftHalf = list_of_numbers[:intMidValue]
+        listRightHalf = list_of_numbers[intMidValue:]
+
+        left_part = MergeSort(listLeftHalf)
+        right_part = MergeSort(listRightHalf)
+
+        count += left_part[1] + right_part[1]
+
+        i = 0
+        j = 0
+        k = 0
+       
+        while i < len(listLeftHalf) and j < len(listRightHalf):
+            count += 1
+            if listLeftHalf[i] < listRightHalf[j]:
+                list_of_numbers[k] = listLeftHalf[i]
+                i = i+1
+
+            else:
+                list_of_numbers[k] = listRightHalf[j]
+                j = j+1
+
+            k = k+1
+
+        while i < len(listLeftHalf):
+            list_of_numbers[k] = listLeftHalf[i]
+            i = i+1
+            k = k+1
+            count += 1
+
+        while j < len(listRightHalf):
+            list_of_numbers[k] = listRightHalf[j]
+            j = j+1
+            k = k+1
+            count += 1
+
+    return list_of_numbers, count
+
+
+print('Pravallika')
+all_text_files = glob.glob("data/*.txt")
+for data_file__ in all_text_files:
+    data_list = []
+    data_file = open(data_file__, "r")
+    for line in data_file:
+        data_list.append(int(line))
+
+
+    start_time = time.time()
+    sorted_numbers, count = MergeSort(data_list)
+    end_time = time.time()
+    
+    
+    # print(sorted_numbers)
+    file_name = Path(data_file__).stem
+    sorted_string = ','.join(map(str, sorted_numbers))
+    print("{}, {}, {}".format(len(data_list), count, end_time-start_time))
